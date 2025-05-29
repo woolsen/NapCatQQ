@@ -1,8 +1,9 @@
-import { lazy, useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import PageBackground from '@/components/page_background'
+import PageLoading from '@/components/page_loading'
 import Toaster from '@/components/toaster'
 
 import DialogProvider from '@/contexts/dialog'
@@ -31,6 +32,11 @@ function App() {
       <Provider store={store}>
         <PageBackground />
         <Toaster />
+        <Suspense fallback={<PageLoading />}>
+          <AuthChecker>
+            <AppRoutes />
+          </AuthChecker>
+        </Suspense>
       </Provider>
     </DialogProvider>
   )
