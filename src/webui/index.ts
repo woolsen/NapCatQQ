@@ -118,6 +118,8 @@ export async function InitWebUi(logger: LogWrapper, pathWrapper: NapCatPathWrapp
         res.send(css);
     });
 
+    app.use('/qrcode', express.static(join(pathWrapper.cachePath, 'qrcode.png')));
+
     // ------------中间件结束------------
 
     // ------------挂载路由------------
