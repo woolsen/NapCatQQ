@@ -120,10 +120,14 @@ import SetGroupAddOption from './extends/SetGroupAddOption';
 import SetGroupSearch from './extends/SetGroupSearch';
 import SetGroupRobotAddOption from './extends/SetGroupRobotAddOption';
 import SetGroupKickMembers from './extends/SetGroupKickMembers';
+import { GetGroupDetailInfo } from './group/GetGroupDetailInfo';
+import GetGroupAddRequest from './extends/GetGroupAddRequest';
+import { GetCollectionList } from './extends/GetCollectionList';
 
 export function createActionMap(obContext: NapCatOneBot11Adapter, core: NapCatCore) {
 
     const actionHandlers = [
+        new GetGroupDetailInfo(obContext, core),
         new SetGroupKickMembers(obContext, core),
         new SetGroupAddOption(obContext, core),
         new SetGroupRobotAddOption(obContext, core),
@@ -255,6 +259,8 @@ export function createActionMap(obContext: NapCatOneBot11Adapter, core: NapCatCo
         new GetPrivateFileUrl(obContext, core),
         new GetUnidirectionalFriendList(obContext, core),
         new CleanCache(obContext, core),
+        new GetGroupAddRequest(obContext, core),
+        new GetCollectionList(obContext, core),
     ];
 
     type HandlerUnion = typeof actionHandlers[number];
