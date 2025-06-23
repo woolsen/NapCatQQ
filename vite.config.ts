@@ -25,6 +25,7 @@ const UniversalBaseConfigPlugin: PluginOption[] = [
         targets: [
             { src: './manifest.json', dest: 'dist' },
             { src: './src/core/external/napcat.json', dest: 'dist/config/' },
+            { src: './src/core/external/onebot11.json', dest: 'dist/config/' },
             { src: './src/native/packet', dest: 'dist/moehoo', flatten: false },
             { src: './src/native/pty', dest: 'dist/pty', flatten: false },
             { src: './napcat.webui/dist/', dest: 'dist/static/', flatten: false },
@@ -48,6 +49,7 @@ const FrameworkBaseConfigPlugin: PluginOption[] = [
         targets: [
             { src: './manifest.json', dest: 'dist' },
             { src: './src/core/external/napcat.json', dest: 'dist/config/' },
+            { src: './src/core/external/onebot11.json', dest: 'dist/config/' },
             { src: './src/native/packet', dest: 'dist/moehoo', flatten: false },
             { src: './src/native/pty', dest: 'dist/pty', flatten: false },
             { src: './napcat.webui/dist/', dest: 'dist/static/', flatten: false },
@@ -70,6 +72,7 @@ const ShellBaseConfigPlugin: PluginOption[] = [
             { src: './src/native/pty', dest: 'dist/pty', flatten: false },
             { src: './napcat.webui/dist/', dest: 'dist/static/', flatten: false },
             { src: './src/core/external/napcat.json', dest: 'dist/config/' },
+            { src: './src/core/external/onebot11.json', dest: 'dist/config/' },
             { src: './package.json', dest: 'dist' },
             { src: './launcher/', dest: 'dist', flatten: true },
             ...startScripts.map((startScript) => {

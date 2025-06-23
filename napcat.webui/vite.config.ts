@@ -1,12 +1,7 @@
 import react from '@vitejs/plugin-react'
-import path from 'node:path'
-import { defineConfig, loadEnv, normalizePath } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import tsconfigPaths from 'vite-tsconfig-paths'
-
-const monacoEditorPath = normalizePath(
-  path.resolve(__dirname, 'node_modules/monaco-editor/min/vs')
-)
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -17,14 +12,6 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tsconfigPaths(),
-      viteStaticCopy({
-        targets: [
-          {
-            src: monacoEditorPath,
-            dest: 'monaco-editor/min'
-          }
-        ]
-      })
     ],
     base: '/webui/',
     server: {
@@ -43,7 +30,6 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            'monaco-editor': ['monaco-editor'],
             'react-dom': ['react-dom'],
             'react-router-dom': ['react-router-dom'],
             'react-hook-form': ['react-hook-form'],
