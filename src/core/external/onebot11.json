@@ -8,7 +8,7 @@
             {
                 "enable": true,
                 "name": "eva",
-                "url": "wss://onebot.woolsen.cn/",
+                "url": "wss://eva.woolsen.cn/ws/onebot",
                 "reportSelfMessage": false,
                 "messagePostFormat": "string",
                 "token": "",
