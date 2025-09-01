@@ -123,10 +123,24 @@ import SetGroupKickMembers from './extends/SetGroupKickMembers';
 import { GetGroupDetailInfo } from './group/GetGroupDetailInfo';
 import GetGroupAddRequest from './extends/GetGroupAddRequest';
 import { GetCollectionList } from './extends/GetCollectionList';
+import { SetGroupTodo } from './packet/SetGroupTodo';
+import { GetQunAlbumList } from './extends/GetQunAlbumList';
+import { UploadImageToQunAlbum } from './extends/UploadImageToQunAlbum';
+import { DoGroupAlbumComment } from './extends/DoGroupAlbumComment';
+import { GetGroupAlbumMediaList } from './extends/GetGroupAlbumMediaList';
+import { SetGroupAlbumMediaLike } from './extends/SetGroupAlbumMediaLike';
+import { DelGroupAlbumMedia } from './extends/DelGroupAlbumMedia';
 
 export function createActionMap(obContext: NapCatOneBot11Adapter, core: NapCatCore) {
 
     const actionHandlers = [
+        new DelGroupAlbumMedia(obContext, core),
+        new SetGroupAlbumMediaLike(obContext, core),
+        new DoGroupAlbumComment(obContext, core),
+        new GetGroupAlbumMediaList(obContext, core),
+        new GetQunAlbumList(obContext, core),
+        new UploadImageToQunAlbum(obContext, core),
+        new SetGroupTodo(obContext, core),
         new GetGroupDetailInfo(obContext, core),
         new SetGroupKickMembers(obContext, core),
         new SetGroupAddOption(obContext, core),

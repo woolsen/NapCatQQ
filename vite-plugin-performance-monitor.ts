@@ -17,7 +17,7 @@ interface PerformancePluginOptions {
  * Vite插件：自动在函数中插入性能监控代码
  */
 export function performanceMonitorPlugin(options: PerformancePluginOptions): Plugin {
-    const exclude = [/node_modules/, /\.min\./, /performance-monitor\.ts$/, /packet/];
+    const exclude = [/node_modules/, /\.min\./, /performance-monitor\.ts$/];
 
     return {
         name: 'performance-monitor',
@@ -56,16 +56,16 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                 // 遍历AST
                 traverse(ast, {
                     // 检查是否已经导入了性能监控器
-                    ImportDeclaration(path) {
+                    ImportDeclaration(path: { node: { source: { value: string | string[]; }; }; }) {
                         if (path.node.source.value.includes('performance-monitor')) {
                             hasMonitorImport = true;
                         }
                     },
 
                     // 检查是否已经导出了性能监控器
-                    ExportNamedDeclaration(path) {
+                    ExportNamedDeclaration(path: { node: { declaration: t.Node | null | undefined; }; }) {
                         if (path.node.declaration && t.isVariableDeclaration(path.node.declaration)) {
-                            path.node.declaration.declarations.forEach(declarator => {
+                            path.node.declaration.declarations.forEach((declarator: { id: t.Node | null | undefined; }) => {
                                 if (t.isIdentifier(declarator.id) && declarator.id.name === 'performanceMonitor') {
                                     hasMonitorExport = true;
                                 }
@@ -74,8 +74,8 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                     },
 
                     // 检查变量声明
-                    VariableDeclaration(path) {
-                        path.node.declarations.forEach(declarator => {
+                    VariableDeclaration(path: { node: { declarations: any[]; }; }) {
+                        path.node.declarations.forEach((declarator: { id: t.Node | null | undefined; }) => {
                             if (t.isIdentifier(declarator.id) && declarator.id.name === 'performanceMonitor') {
                                 hasMonitorExport = true;
                             }
@@ -83,7 +83,7 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                     },
 
                     // 处理函数声明
-                    FunctionDeclaration(path) {
+                    FunctionDeclaration(path: { node: { id: { name: string; }; loc: { start: { line: number; }; }; }; }) {
                         const functionName = path.node.id?.name || 'anonymous';
                         const lineNumber = path.node.loc?.start.line || 0;
 
@@ -92,7 +92,7 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                     },
 
                     // 处理箭头函数
-                    ArrowFunctionExpression(path) {
+                    ArrowFunctionExpression(path: { parent: any; node: { loc: { start: { line: number; }; }; }; }) {
                         const parent = path.parent;
                         let functionName = 'anonymous';
 
@@ -113,7 +113,7 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                     },
 
                     // 处理函数表达式
-                    FunctionExpression(path) {
+                    FunctionExpression(path: { node: { id: { name: string; }; loc: { start: { line: number; }; }; }; }) {
                         const functionName = path.node.id?.name || 'anonymous';
                         const lineNumber = path.node.loc?.start.line || 0;
 
@@ -122,7 +122,7 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                     },
 
                     // 处理类方法
-                    ClassMethod(path) {
+                    ClassMethod(path: { node: { key: t.Node | null | undefined; loc: { start: { line: number; }; }; }; }) {
                         const methodName = t.isIdentifier(path.node.key) ? path.node.key.name : 'anonymous';
                         const className = getClassName(path);
                         const functionName = `${className}.${methodName}`;
@@ -133,7 +133,7 @@ export function performanceMonitorPlugin(options: PerformancePluginOptions): Plu
                     },
 
                     // 处理对象方法
-                    ObjectMethod(path) {
+                    ObjectMethod(path: { node: { key: t.Node | null | undefined; loc: { start: { line: number; }; }; }; }) {
                         const methodName = t.isIdentifier(path.node.key) ? path.node.key.name : 'anonymous';
                         const lineNumber = path.node.loc?.start.line || 0;
 

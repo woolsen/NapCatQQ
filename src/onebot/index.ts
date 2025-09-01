@@ -40,7 +40,6 @@ import { OB11FriendRequestEvent } from '@/onebot/event/request/OB11FriendRequest
 import { OB11GroupRequestEvent } from '@/onebot/event/request/OB11GroupRequest';
 import { OB11FriendRecallNoticeEvent } from '@/onebot/event/notice/OB11FriendRecallNoticeEvent';
 import { OB11GroupRecallNoticeEvent } from '@/onebot/event/notice/OB11GroupRecallNoticeEvent';
-import { LRUCache } from '@/common/lru-cache';
 import { BotOfflineEvent } from './event/notice/BotOfflineEvent';
 import {
     NetworkAdapterConfig,
@@ -62,8 +61,8 @@ export class NapCatOneBot11Adapter {
     networkManager: OB11NetworkManager;
     actions: ActionMap;
     private readonly bootTime = Date.now() / 1000;
-    recallMsgCache = new LRUCache<string, RawMessage>(100);
-
+    //recallMsgCache = new LRUCache<string, boolean>(100);
+    recallEventCache = new Map<string, any>();
     constructor(core: NapCatCore, context: InstanceContext, pathWrapper: NapCatPathWrapper) {
         this.core = core;
         this.context = context;
@@ -307,15 +306,18 @@ export class NapCatOneBot11Adapter {
             };
             let msg = (await this.core.apis.MsgApi.queryMsgsWithFilterExWithSeq(peer, msgSeq)).msgList.find(e => e.msgType == NTMsgType.KMSGTYPEGRAYTIPS);
             const element = msg?.elements.find(e => !!e.grayTipElement?.revokeElement);
-            if (element?.grayTipElement?.revokeElement.isSelfOperate && msg) {
-                await this.core.eventWrapper.registerListen('NodeIKernelMsgListener/onMsgRecall',
-                    (chatType: ChatType, uid: string, msgSeq: string) => {
-                        return chatType === msg?.chatType && uid === msg?.peerUid && msgSeq === msg?.msgSeq;
-                    }
-                ).catch(() => {
-                    msg = undefined;
-                    this.context.logger.logDebug('自操作消息撤回事件');
-                });
+            if (msg && element?.grayTipElement?.revokeElement.isSelfOperate) {
+                const isSelfDevice = this.recallEventCache.has(msg.msgId);
+                if (isSelfDevice) {
+                    await this.core.eventWrapper.registerListen('NodeIKernelMsgListener/onMsgRecall',
+                        (chatType: ChatType, uid: string, msgSeq: string) => {
+                            return chatType === msg?.chatType && uid === msg?.peerUid && msgSeq === msg?.msgSeq;
+                        }
+                    ).catch(() => {
+                        msg = undefined;
+                        this.context.logger.logDebug('自操作消息撤回事件');
+                    });
+                }
             }
             if (msg && element) {
                 const recallEvent = await this.emitRecallMsg(msg, element);
