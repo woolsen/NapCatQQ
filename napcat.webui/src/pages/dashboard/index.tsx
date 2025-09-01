@@ -1,11 +1,9 @@
-import { Card, CardBody } from '@heroui/card'
 import { useRequest } from 'ahooks'
 import { useCallback, useEffect, useState } from 'react'
 import { useRef } from 'react'
 import toast from 'react-hot-toast'
 
 import NetworkItemDisplay from '@/components/display_network_item'
-import Hitokoto from '@/components/hitokoto'
 import QQInfoCard from '@/components/qq_info_card'
 import SystemInfo from '@/components/system_info'
 import SystemStatusDisplay from '@/components/system_status_display'
@@ -105,11 +103,6 @@ const DashboardIndexPage: React.FC = () => {
           <SystemStatusCard setArchInfo={setArchInfo} />
         </div>
         <Networks />
-        <Card className="bg-opacity-60 shadow-sm shadow-primary-100">
-          <CardBody>
-            <Hitokoto />
-          </CardBody>
-        </Card>
       </section>
     </>
   )
